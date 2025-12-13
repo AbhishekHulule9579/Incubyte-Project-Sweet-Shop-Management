@@ -1,7 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
+import heroImage from '../assets/hero.jpg'; // Make sure to name your image 'hero.png'
 
 const Home = () => {
+    const navigate = useNavigate();
+
     return (
         <div className="home-page">
             {/* Header / Navbar */}
@@ -22,14 +26,14 @@ const Home = () => {
                     </nav>
                     <div className="header-actions">
                         <button className="icon-btn">🔍</button>
-                        <button className="icon-btn">👤</button>
+                        <button className="icon-btn" onClick={() => navigate('/login')}>👤</button>
                         <button className="icon-btn">🛍️</button>
                     </div>
                 </div>
             </header>
 
             {/* Hero Section */}
-            <section className="hero-section">
+            <section className="hero-section" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${heroImage})` }}>
                 <div className="hero-content">
                     <h2>Traditional Indian Sweets</h2>
                     <p>Handcrafted with love and pure ingredients.</p>
