@@ -11,21 +11,46 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.sweetcorner.incubyte_backend.filter.JwtAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuration class for Spring Security.
+ * It defines the security filter chain, password encoding, and HTTP request
+ * authorization rules.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param jwtAuthenticationFilter Custom filter for JWT authentication.
+     */
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    /**
+     * Bean definition for PasswordEncoder.
+     * Uses BCrypt for strong hashing of passwords.
+     *
+     * @return The PasswordEncoder instance.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures the security filter chain.
+     * Sets up CORS, CSRF, URL authorization, and adds the JWT authentication
+     * filter.
+     *
+     * @param http The HttpSecurity object to configure.
+     * @return The configured SecurityFilterChain.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

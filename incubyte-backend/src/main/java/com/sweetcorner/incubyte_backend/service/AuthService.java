@@ -11,6 +11,10 @@ import com.sweetcorner.incubyte_backend.util.JwtUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for handling authentication logic.
+ * Manages user registration and login processes.
+ */
 @Service
 public class AuthService {
 
@@ -19,6 +23,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param userRepository  Repository for User data.
+     * @param adminRepository Repository for Admin data.
+     * @param passwordEncoder utility for password encoding.
+     * @param jwtUtils        Utility for JWT operations.
+     */
     public AuthService(UserRepository userRepository, AdminRepository adminRepository, PasswordEncoder passwordEncoder,
             JwtUtils jwtUtils) {
         this.userRepository = userRepository;
@@ -27,6 +39,13 @@ public class AuthService {
         this.jwtUtils = jwtUtils;
     }
 
+    /**
+     * Registers a new customer in the system.
+     *
+     * @param request The registration request containing user details.
+     * @return An AuthResponse containing the JWT token and user info.
+     * @throws RuntimeException if the email already exists.
+     */
     public AuthResponse registerCustomer(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
@@ -44,6 +63,13 @@ public class AuthService {
         return new AuthResponse(token, user.getEmail(), user.getFullName(), "CUSTOMER");
     }
 
+    /**
+     * Authenticates a user (Admin or Customer) and generates a JWT token.
+     *
+     * @param request The login request containing credentials.
+     * @return An AuthResponse containing the JWT token and user info.
+     * @throws RuntimeException if the user is not found or credentials are invalid.
+     */
     public AuthResponse login(LoginRequest request) {
         String role = request.getRole() != null ? request.getRole().toUpperCase() : "CUSTOMER";
 

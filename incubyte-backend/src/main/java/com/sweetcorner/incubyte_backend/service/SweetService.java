@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class for managing sweets and orders.
+ * Handles the business logic for creating, updating, retrieving, restocking,
+ * and purchasing sweets.
+ */
 @Service
 public class SweetService {
 
@@ -16,6 +21,13 @@ public class SweetService {
     private final CategoryRepository categoryRepository;
     private final com.sweetcorner.incubyte_backend.repository.SweetOrderRepository sweetOrderRepository;
 
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param sweetRepository      Repository for accessing Sweet data.
+     * @param categoryRepository   Repository for accessing Category data.
+     * @param sweetOrderRepository Repository for accessing SweetOrder data.
+     */
     public SweetService(SweetRepository sweetRepository, CategoryRepository categoryRepository,
             com.sweetcorner.incubyte_backend.repository.SweetOrderRepository sweetOrderRepository) {
         this.sweetRepository = sweetRepository;
@@ -23,14 +35,32 @@ public class SweetService {
         this.sweetOrderRepository = sweetOrderRepository;
     }
 
+    /**
+     * Retrieves all sweets from the database.
+     *
+     * @return A list of all available sweets.
+     */
     public List<Sweet> getAllSweets() {
         return sweetRepository.findAll();
     }
 
+    /**
+     * Retrieves sweets by their category name.
+     *
+     * @param categoryName The name of the category to filter by.
+     * @return A list of sweets in the specified category.
+     */
     public List<Sweet> getSweetsByCategory(String categoryName) {
         return sweetRepository.findByCategoryName(categoryName);
     }
 
+    /**
+     * Adds a new sweet to the inventory.
+     *
+     * @param request The request containing details of the sweet to add.
+     * @return The newly created Sweet object.
+     * @throws RuntimeException if the specified category is not found.
+     */
     public Sweet addSweet(SweetRequest request) {
         Category category = categoryRepository.findByName(request.getCategoryName())
                 .orElseThrow(() -> new RuntimeException("Category not found: " + request.getCategoryName()));
@@ -46,6 +76,14 @@ public class SweetService {
         return sweetRepository.save(sweet);
     }
 
+    /**
+     * Updates an existing sweet's details.
+     *
+     * @param id      The ID of the sweet to update.
+     * @param request The new details for the sweet.
+     * @return The updated Sweet object.
+     * @throws RuntimeException if the sweet or category is not found.
+     */
     public Sweet updateSweet(Long id, SweetRequest request) {
         Sweet sweet = sweetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sweet not found"));
@@ -63,6 +101,14 @@ public class SweetService {
         return sweetRepository.save(sweet);
     }
 
+    /**
+     * Increases the quantity of a sweet in stock.
+     *
+     * @param id            The ID of the sweet to restock.
+     * @param quantityToAdd The amount to add to the current stock.
+     * @return The updated Sweet object.
+     * @throws RuntimeException if the sweet is not found.
+     */
     public Sweet restockSweet(Long id, Integer quantityToAdd) {
         Sweet sweet = sweetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sweet not found"));
@@ -71,6 +117,12 @@ public class SweetService {
         return sweetRepository.save(sweet);
     }
 
+    /**
+     * Deletes a sweet from the database.
+     *
+     * @param id The ID of the sweet to delete.
+     * @throws RuntimeException if the sweet is not found.
+     */
     public void deleteSweet(Long id) {
         if (!sweetRepository.existsById(id)) {
             throw new RuntimeException("Sweet not found");
@@ -78,6 +130,16 @@ public class SweetService {
         sweetRepository.deleteById(id);
     }
 
+    /**
+     * Processes a purchase transaction.
+     * It updates the stock quantity for each purchased item and saves an order
+     * record.
+     *
+     * @param items     List of maps containing item ID and quantity.
+     * @param userEmail The email of the user making the purchase.
+     * @throws RuntimeException if a sweet is not found or if there is insufficient
+     *                          stock.
+     */
     @org.springframework.transaction.annotation.Transactional
     public void purchaseSweets(List<java.util.Map<String, Object>> items, String userEmail) {
         com.sweetcorner.incubyte_backend.entity.SweetOrder order = new com.sweetcorner.incubyte_backend.entity.SweetOrder();
@@ -119,6 +181,12 @@ public class SweetService {
         sweetOrderRepository.save(order);
     }
 
+    /**
+     * Retrieves the order history for a specific user.
+     *
+     * @param userEmail The email of the user.
+     * @return A list of past orders for the user.
+     */
     public java.util.List<com.sweetcorner.incubyte_backend.entity.SweetOrder> getUserOrders(String userEmail) {
         return sweetOrderRepository.findByUserEmailOrderByOrderDateDesc(userEmail);
     }

@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller for managing sweet products.
+ * Handles CRUD operations for sweets, restocking, and purchasing.
+ */
 @RestController
 @RequestMapping("/api/sweets")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -16,20 +20,42 @@ public class SweetController {
 
     private final SweetService sweetService;
 
+    /**
+     * Constructor for dependency injection.
+     *
+     * @param sweetService Service for handling sweet-related logic.
+     */
     public SweetController(SweetService sweetService) {
         this.sweetService = sweetService;
     }
 
+    /**
+     * Retrieves all available sweets.
+     *
+     * @return A list of all Sweet objects.
+     */
     @GetMapping
     public List<Sweet> getAllSweets() {
         return sweetService.getAllSweets();
     }
 
+    /**
+     * Retrieves sweets belonging to a specific category.
+     *
+     * @param name The name of the category.
+     * @return A list of Sweet objects in the specified category.
+     */
     @GetMapping("/category/{name}")
     public List<Sweet> getSweetsByCategory(@PathVariable String name) {
         return sweetService.getSweetsByCategory(name);
     }
 
+    /**
+     * Adds a new sweet to the inventory.
+     *
+     * @param request The details of the new sweet.
+     * @return ResponseEntity containing the created sweet or an error message.
+     */
     @PostMapping
     public ResponseEntity<?> addSweet(@RequestBody SweetRequest request) {
         try {
@@ -39,6 +65,13 @@ public class SweetController {
         }
     }
 
+    /**
+     * Updates an existing sweet.
+     *
+     * @param id      The ID of the sweet to update.
+     * @param request The updated sweet details.
+     * @return ResponseEntity containing the updated sweet or an error message.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateSweet(@PathVariable Long id, @RequestBody SweetRequest request) {
         try {
@@ -48,6 +81,13 @@ public class SweetController {
         }
     }
 
+    /**
+     * Restocks the quantity of a specific sweet.
+     *
+     * @param id      The ID of the sweet to restock.
+     * @param payload Map containing the quantity to add.
+     * @return ResponseEntity containing the updated sweet or an error message.
+     */
     @PostMapping("/{id}/restock")
     public ResponseEntity<?> restockSweet(@PathVariable Long id, @RequestBody Map<String, Integer> payload) {
         try {
@@ -61,6 +101,12 @@ public class SweetController {
         }
     }
 
+    /**
+     * Deletes a sweet from the inventory.
+     *
+     * @param id The ID of the sweet to delete.
+     * @return ResponseEntity containing a success message or failure reason.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSweet(@PathVariable Long id) {
         try {
@@ -71,6 +117,13 @@ public class SweetController {
         }
     }
 
+    /**
+     * Processes a purchase of sweets.
+     *
+     * @param items     List of items to purchase.
+     * @param principal The authenticated user making the purchase.
+     * @return ResponseEntity containing a success message or error details.
+     */
     @PostMapping("/purchase")
     public ResponseEntity<?> purchaseSweets(@RequestBody List<Map<String, Object>> items,
             java.security.Principal principal) {
@@ -85,6 +138,12 @@ public class SweetController {
         }
     }
 
+    /**
+     * Retrieves the order history for the authenticated user.
+     *
+     * @param principal The authenticated user.
+     * @return ResponseEntity containing the list of orders or error details.
+     */
     @GetMapping("/orders")
     public ResponseEntity<?> getMyOrders(java.security.Principal principal) {
         try {
@@ -97,6 +156,12 @@ public class SweetController {
         }
     }
 
+    /**
+     * Uploads an image file for a product.
+     *
+     * @param file The image file to upload.
+     * @return ResponseEntity containing the file URL or error message.
+     */
     @PostMapping("/upload")
     public ResponseEntity<?> uploadImage(@RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
         try {
