@@ -25,10 +25,24 @@ public class SweetController {
         return sweetService.getAllSweets();
     }
 
+    @GetMapping("/category/{name}")
+    public List<Sweet> getSweetsByCategory(@PathVariable String name) {
+        return sweetService.getSweetsByCategory(name);
+    }
+
     @PostMapping
     public ResponseEntity<?> addSweet(@RequestBody SweetRequest request) {
         try {
             return ResponseEntity.ok(sweetService.addSweet(request));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateSweet(@PathVariable Long id, @RequestBody SweetRequest request) {
+        try {
+            return ResponseEntity.ok(sweetService.updateSweet(id, request));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
@@ -71,7 +85,12 @@ public class SweetController {
             }
 
             // Generate unique filename
-            String filename = java.util.UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null) {
+                originalFilename = "image";
+            }
+            String sanitizedFilename = originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
+            String filename = java.util.UUID.randomUUID().toString() + "_" + sanitizedFilename;
             java.nio.file.Path filePath = uploadPath.resolve(filename);
 
             // Save file

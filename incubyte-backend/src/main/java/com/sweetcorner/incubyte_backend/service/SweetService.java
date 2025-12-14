@@ -24,11 +24,32 @@ public class SweetService {
         return sweetRepository.findAll();
     }
 
+    public List<Sweet> getSweetsByCategory(String categoryName) {
+        return sweetRepository.findByCategoryName(categoryName);
+    }
+
     public Sweet addSweet(SweetRequest request) {
         Category category = categoryRepository.findByName(request.getCategoryName())
                 .orElseThrow(() -> new RuntimeException("Category not found: " + request.getCategoryName()));
 
         Sweet sweet = new Sweet();
+        sweet.setName(request.getName());
+        sweet.setDescription(request.getDescription());
+        sweet.setPrice(request.getPrice());
+        sweet.setQuantity(request.getQuantity());
+        sweet.setImageUrl(request.getImageUrl());
+        sweet.setCategory(category);
+
+        return sweetRepository.save(sweet);
+    }
+
+    public Sweet updateSweet(Long id, SweetRequest request) {
+        Sweet sweet = sweetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sweet not found"));
+
+        Category category = categoryRepository.findByName(request.getCategoryName())
+                .orElseThrow(() -> new RuntimeException("Category not found: " + request.getCategoryName()));
+
         sweet.setName(request.getName());
         sweet.setDescription(request.getDescription());
         sweet.setPrice(request.getPrice());

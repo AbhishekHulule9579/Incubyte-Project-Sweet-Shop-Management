@@ -19,7 +19,7 @@ public class Sweet {
     @Column(nullable = false)
     private String name;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)
@@ -28,6 +28,7 @@ public class Sweet {
     @Column(nullable = false)
     private Integer quantity; // Available stock
 
+    @Column(length = 2048)
     private String imageUrl;
 
     @ManyToOne

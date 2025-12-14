@@ -32,7 +32,13 @@ public class SecurityConfig {
                 .cors(cors -> cors.configure(http)) // Enable CORS
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for REST API
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Allow Login/Register
+                        .requestMatchers("/api/auth/**", "/uploads/**").permitAll() // Allow Login/Register and Uploads
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/sweets/**").permitAll() // Allow
+                                                                                                                // public
+                                                                                                                // access
+                                                                                                                // to
+                                                                                                                // view
+                                                                                                                // sweets
                         .anyRequest().authenticated() // Protect everything else
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

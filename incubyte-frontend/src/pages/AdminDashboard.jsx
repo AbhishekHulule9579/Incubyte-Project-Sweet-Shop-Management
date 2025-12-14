@@ -8,6 +8,7 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
     const [sweets, setSweets] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [editId, setEditId] = useState(null);
     const [loading, setLoading] = useState(true);
 
     // Form State
@@ -69,6 +70,20 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleEditClick = (sweet) => {
+        setNewItem({
+            name: sweet.name,
+            description: sweet.description,
+            price: sweet.price,
+            quantity: sweet.quantity,
+            categoryName: sweet.category?.name || 'Sweets',
+            imageUrl: sweet.imageUrl
+        });
+        setEditId(sweet.id);
+        setImageMode('url'); // Default to URL mode for editing, can switch to upload if needed
+        setShowModal(true);
+    };
+
     const handleAddItem = async (e) => {
         e.preventDefault();
 
@@ -86,8 +101,13 @@ const AdminDashboard = () => {
         const itemPayload = { ...newItem, imageUrl: finalImageUrl };
 
         try {
-            const response = await fetch('http://localhost:8080/api/sweets', {
-                method: 'POST',
+            const url = editId
+                ? `http://localhost:8080/api/sweets/${editId}`
+                : 'http://localhost:8080/api/sweets';
+            const method = editId ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -98,12 +118,13 @@ const AdminDashboard = () => {
                 setShowModal(false);
                 setNewItem({ name: '', description: '', price: '', quantity: '', categoryName: 'Sweets', imageUrl: '' });
                 setSelectedFile(null);
+                setEditId(null);
                 fetchSweets();
             } else {
                 alert('From Backend: ' + await response.text());
             }
         } catch (error) {
-            console.error('Error adding sweet', error);
+            console.error('Error saving sweet', error);
         }
     };
 
@@ -154,12 +175,64 @@ const AdminDashboard = () => {
         );
     };
 
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [maxQuantity, setMaxQuantity] = useState(100);
+
+    // Filter Logic
+    const filteredSweets = sweets.filter(sweet => {
+        const matchesSearch = sweet.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            sweet.description?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' || sweet.category?.name === selectedCategory;
+        const matchesQuantity = sweet.quantity <= maxQuantity;
+
+        return matchesSearch && matchesCategory && matchesQuantity;
+    });
+
+    // ... existing handlers ...
+
     return (
         <div className="admin-dashboard container">
             <header className="dashboard-header">
                 <h2>Admin Dashboard</h2>
-                <button className="add-btn" onClick={() => setShowModal(true)}>+ Add New Sweet</button>
+                <button className="add-btn" onClick={() => { setShowModal(true); setEditId(null); setNewItem({ name: '', description: '', price: '', quantity: '', categoryName: 'Sweets', imageUrl: '' }); }}>+ Add New Sweet</button>
             </header>
+
+            {/* Filter Bar */}
+            <div className="filter-bar" style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                <div className="filter-group">
+                    <input
+                        type="text"
+                        placeholder="Search sweets..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                    />
+                </div>
+                <div className="filter-group">
+                    <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                    >
+                        <option value="All">All Categories</option>
+                        <option value="Sweets">Sweets</option>
+                        <option value="Namkeen">Namkeen</option>
+                        <option value="Gifting">Gifting</option>
+                        <option value="Dry-Fruits">Dry-Fruits</option>
+                    </select>
+                </div>
+                <div className="filter-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <label>Max Qty: {maxQuantity}</label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="200"
+                        value={maxQuantity}
+                        onChange={(e) => setMaxQuantity(Number(e.target.value))}
+                    />
+                </div>
+            </div>
 
             {loading ? <p>Loading inventory...</p> : (
                 <div className="inventory-table-wrapper">
@@ -175,7 +248,7 @@ const AdminDashboard = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sweets.map(sweet => (
+                            {filteredSweets.map(sweet => (
                                 <tr key={sweet.id}>
                                     <td>
                                         <div className="img-preview">
@@ -195,6 +268,9 @@ const AdminDashboard = () => {
                                     <td>
                                         <div className="action-group">
                                             <RestockControl id={sweet.id} />
+                                            <button onClick={() => handleEditClick(sweet)} className="action-btn edit-btn" style={{ backgroundColor: '#ffc107', color: '#000', marginRight: '5px' }}>
+                                                Edit
+                                            </button>
                                             <button onClick={() => handleDelete(sweet.id)} className="action-btn delete-btn">
                                                 Remove
                                             </button>
@@ -210,7 +286,7 @@ const AdminDashboard = () => {
             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h3>Add New Sweet</h3>
+                        <h3>{editId ? 'Edit Sweet' : 'Add New Sweet'}</h3>
                         <form onSubmit={handleAddItem}>
                             <div className="form-group">
                                 <label>Category</label>
@@ -221,6 +297,7 @@ const AdminDashboard = () => {
                                     <option value="Sweets">Sweets</option>
                                     <option value="Namkeen">Namkeen</option>
                                     <option value="Gifting">Gifting</option>
+                                    <option value="Dry-Fruits">Dry-Fruits</option>
                                 </select>
                             </div>
                             <div className="form-group">

@@ -1,8 +1,56 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import heroImage from '../assets/hero.jpg';
 
 const Home = () => {
+    const navigate = useNavigate();
+
+    const [categories, setCategories] = useState([
+        { id: 'Sweets', name: 'Sweets', count: 0, image: null, bgColor: '#ffe4e1', path: '/sweets' },
+        { id: 'Namkeen', name: 'Namkeen', count: 0, image: null, bgColor: '#f0f8ff', path: '/namkeen' },
+        { id: 'Dry-Fruits', name: 'Dry Fruits', count: 0, image: null, bgColor: '#e6e6fa', path: '/dry-fruits' },
+        { id: 'Gifting', name: 'Gifting', count: 0, image: null, bgColor: '#f5f5dc', path: '/gifting' }
+    ]);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/api/sweets')
+            .then(res => res.json())
+            .then(data => {
+                const stats = {
+                    'Sweets': { count: 0, maxQty: -1, image: null },
+                    'Namkeen': { count: 0, maxQty: -1, image: null },
+                    'Dry-Fruits': { count: 0, maxQty: -1, image: null },
+                    'Gifting': { count: 0, maxQty: -1, image: null }
+                };
+
+                data.forEach(item => {
+                    const catName = item.category?.name;
+                    if (catName && stats[catName]) {
+                        stats[catName].count++;
+                        // Track image of item with highest quantity
+                        if (item.quantity > stats[catName].maxQty) {
+                            stats[catName].maxQty = item.quantity;
+                            if (item.imageUrl) {
+                                stats[catName].image = item.imageUrl;
+                            }
+                        }
+                    }
+                });
+
+                setCategories(prev => prev.map(cat => ({
+                    ...cat,
+                    count: stats[cat.id]?.count || 0,
+                    image: stats[cat.id]?.image || null
+                })));
+            })
+            .catch(err => console.error("Failed to load collections data", err));
+    }, []);
+
+    const handleCategoryClick = (path) => {
+        navigate(path);
+    };
+
     return (
         <div className="home-page">
             {/* Hero Section */}
@@ -40,27 +88,28 @@ const Home = () => {
                     <p>Explore our wide range of delicacies</p>
                 </div>
                 <div className="categories-grid">
-                    {/* Mock Categories - In real app, these come from API */}
-                    <div className="category-card">
-                        <div className="cat-image placeholder-img" style={{ backgroundColor: '#ffe4e1' }}></div>
-                        <h3>Sweets</h3>
-                        <p>24 Products</p>
-                    </div>
-                    <div className="category-card">
-                        <div className="cat-image placeholder-img" style={{ backgroundColor: '#f0f8ff' }}></div>
-                        <h3>Namkeen</h3>
-                        <p>12 Products</p>
-                    </div>
-                    <div className="category-card">
-                        <div className="cat-image placeholder-img" style={{ backgroundColor: '#e6e6fa' }}></div>
-                        <h3>Dry Fruits</h3>
-                        <p>8 Products</p>
-                    </div>
-                    <div className="category-card">
-                        <div className="cat-image placeholder-img" style={{ backgroundColor: '#f5f5dc' }}></div>
-                        <h3>Gifting</h3>
-                        <p>15 Products</p>
-                    </div>
+                    {categories.map(cat => (
+                        <div
+                            key={cat.id}
+                            className="category-card"
+                            onClick={() => handleCategoryClick(cat.path)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <div
+                                className="cat-image"
+                                style={{
+                                    backgroundColor: cat.bgColor,
+                                    backgroundImage: cat.image ? `url(${cat.image})` : 'none',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center'
+                                }}
+                            >
+                                {!cat.image && <span style={{ opacity: 0.3, fontSize: '2rem' }}>🍬</span>}
+                            </div>
+                            <h3>{cat.name}</h3>
+                            <p>{cat.count} Products</p>
+                        </div>
+                    ))}
                 </div>
             </section>
         </div>

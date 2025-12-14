@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import SearchModal from './SearchModal';
 import '../styles/Navbar.css';
 
 const Navbar = () => {
     const navigate = useNavigate();
     const { isAuthenticated, isAdmin, isCustomer, user, logout } = useAuth();
     const [showDropdown, setShowDropdown] = useState(false);
+    const [showSearchModal, setShowSearchModal] = useState(false);
     const dropdownRef = useRef(null);
 
     // Close dropdown when clicking outside
@@ -44,15 +46,16 @@ const Navbar = () => {
                 </Link>
                 <nav className="main-nav">
                     <ul>
-                        <li><a href="#">Shop All</a></li>
-                        <li><a href="#">Sweets</a></li>
-                        <li><a href="#">Namkeen</a></li>
-                        <li><a href="#">Gifting</a></li>
+                        <li><Link to="/shop">Shop All</Link></li>
+                        <li><Link to="/sweets">Sweets</Link></li>
+                        <li><Link to="/dry-fruits">Dry-Fruits</Link></li>
+                        <li><Link to="/namkeen">Namkeen</Link></li>
+                        <li><Link to="/gifting">Gifting</Link></li>
                         <li><a href="#">About Us</a></li>
                     </ul>
                 </nav>
                 <div className="header-actions">
-                    <button className="icon-btn">🔍</button>
+                    <button className="icon-btn" onClick={() => setShowSearchModal(true)}>🔍</button>
 
                     {/* Profile Button with Dropdown */}
                     <div className="profile-dropdown" ref={dropdownRef}>
@@ -92,6 +95,7 @@ const Navbar = () => {
                     )}
                 </div>
             </div>
+            {showSearchModal && <SearchModal onClose={() => setShowSearchModal(false)} />}
         </header>
     );
 };

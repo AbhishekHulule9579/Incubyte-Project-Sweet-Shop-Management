@@ -19,6 +19,7 @@ public class DataInitializer implements CommandLineRunner {
         createCategoryIfNotFound("Sweets");
         createCategoryIfNotFound("Namkeen");
         createCategoryIfNotFound("Gifting");
+        createCategoryIfNotFound("Dry-Fruits");
     }
 
     private void createCategoryIfNotFound(String name) {
