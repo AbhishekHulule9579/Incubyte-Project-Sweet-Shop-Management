@@ -13,7 +13,7 @@ const AdminDashboard = () => {
 
     // Form State
     const [newItem, setNewItem] = useState({
-        name: '', description: '', price: '', quantity: '', categoryName: 'Sweets', imageUrl: ''
+        name: '', description: '', price: '', quantity: '', categoryName: 'Sweet', imageUrl: ''
     });
 
     // Image Upload State
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
             description: sweet.description,
             price: sweet.price,
             quantity: sweet.quantity,
-            categoryName: sweet.category?.name || 'Sweets',
+            categoryName: sweet.category?.name || 'Sweet',
             imageUrl: sweet.imageUrl
         });
         setEditId(sweet.id);
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
             });
             if (response.ok) {
                 setShowModal(false);
-                setNewItem({ name: '', description: '', price: '', quantity: '', categoryName: 'Sweets', imageUrl: '' });
+                setNewItem({ name: '', description: '', price: '', quantity: '', categoryName: 'Sweet', imageUrl: '' });
                 setSelectedFile(null);
                 setEditId(null);
                 fetchSweets();
@@ -195,7 +195,7 @@ const AdminDashboard = () => {
         <div className="admin-dashboard container">
             <header className="dashboard-header">
                 <h2>Admin Dashboard</h2>
-                <button className="add-btn" onClick={() => { setShowModal(true); setEditId(null); setNewItem({ name: '', description: '', price: '', quantity: '', categoryName: 'Sweets', imageUrl: '' }); }}>+ Add New Sweet</button>
+                <button className="add-btn" onClick={() => { setShowModal(true); setEditId(null); setNewItem({ name: '', description: '', price: '', quantity: '', categoryName: 'Sweet', imageUrl: '' }); }}>+ Add New Sweet</button>
             </header>
 
             {/* Filter Bar */}
@@ -216,7 +216,7 @@ const AdminDashboard = () => {
                         style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
                     >
                         <option value="All">All Categories</option>
-                        <option value="Sweets">Sweets</option>
+                        <option value="Sweet">Sweet</option>
                         <option value="Namkeen">Namkeen</option>
                         <option value="Gifting">Gifting</option>
                         <option value="Dry-Fruits">Dry-Fruits</option>
@@ -294,7 +294,7 @@ const AdminDashboard = () => {
                                     value={newItem.categoryName}
                                     onChange={e => setNewItem({ ...newItem, categoryName: e.target.value })}
                                 >
-                                    <option value="Sweets">Sweets</option>
+                                    <option value="Sweet">Sweet</option>
                                     <option value="Namkeen">Namkeen</option>
                                     <option value="Gifting">Gifting</option>
                                     <option value="Dry-Fruits">Dry-Fruits</option>

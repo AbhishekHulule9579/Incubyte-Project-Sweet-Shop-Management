@@ -46,8 +46,8 @@ const Navbar = () => {
                 </Link>
                 <nav className="main-nav">
                     <ul>
-                        <li><Link to="/shop">Shop All</Link></li>
                         <li><Link to="/sweets">Sweets</Link></li>
+                        <li><Link to="/sweet">Sweet</Link></li>
                         <li><Link to="/dry-fruits">Dry-Fruits</Link></li>
                         <li><Link to="/namkeen">Namkeen</Link></li>
                         <li><Link to="/gifting">Gifting</Link></li>
@@ -71,6 +71,11 @@ const Navbar = () => {
                                     <span className="user-role">{isAdmin() ? 'Admin' : 'Customer'}</span>
                                 </div>
                                 <div className="dropdown-divider"></div>
+                                {!isAdmin() && (
+                                    <button className="dropdown-item" onClick={() => { setShowDropdown(false); navigate('/orders'); }}>
+                                        📦 Your Orders
+                                    </button>
+                                )}
                                 <button className="dropdown-item logout-btn" onClick={handleLogout}>
                                     🚪 Logout
                                 </button>
@@ -89,9 +94,17 @@ const Navbar = () => {
                         </button>
                     )}
 
-                    {/* Cart Button - Only visible to Customers */}
-                    {isCustomer() && (
-                        <button className="icon-btn" onClick={() => navigate('/cart')}>🛍️</button>
+                    {/* Cart Button - Visible to everyone EXCEPT Admin */}
+                    {!isAdmin() && (
+                        <button className="icon-btn" onClick={() => {
+                            if (isAuthenticated()) {
+                                navigate('/cart');
+                            } else {
+                                navigate('/login', { state: { from: '/cart' } });
+                            }
+                        }}>
+                            🛍️
+                        </button>
                     )}
                 </div>
             </div>

@@ -71,6 +71,32 @@ public class SweetController {
         }
     }
 
+    @PostMapping("/purchase")
+    public ResponseEntity<?> purchaseSweets(@RequestBody List<Map<String, Object>> items,
+            java.security.Principal principal) {
+        try {
+            if (principal == null) {
+                return ResponseEntity.status(401).body(Map.of("message", "User not authenticated"));
+            }
+            sweetService.purchaseSweets(items, principal.getName());
+            return ResponseEntity.ok(Map.of("message", "Purchase successful"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<?> getMyOrders(java.security.Principal principal) {
+        try {
+            if (principal == null) {
+                return ResponseEntity.status(401).body(Map.of("message", "User not authenticated"));
+            }
+            return ResponseEntity.ok(sweetService.getUserOrders(principal.getName()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<?> uploadImage(@RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
         try {

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import '../styles/ProductCard.css';
 
 const ProductCard = ({ product }) => {
+    const { addToCart } = useCart();
+    const { isAdmin } = useAuth();
     const [quantity, setQuantity] = useState(1);
 
     const handleQuantityChange = (type) => {
@@ -13,9 +17,7 @@ const ProductCard = ({ product }) => {
     };
 
     const handleAddToCart = () => {
-        // Placeholder for future cart logic
-        console.log(`Added ${quantity} of ${product.name} to cart`);
-        // In a real app, we'd use a context or redux action here
+        addToCart(product, quantity);
         alert(`Added ${quantity} ${product.name}(s) to cart!`);
     };
 
@@ -42,25 +44,35 @@ const ProductCard = ({ product }) => {
                 </div>
 
                 <div className="product-actions">
-                    <div className="quantity-selector">
-                        <button
-                            onClick={() => handleQuantityChange('decrement')}
-                            className="qty-btn"
-                        >
-                            −
-                        </button>
-                        <span className="qty-value">{quantity}</span>
-                        <button
-                            onClick={() => handleQuantityChange('increment')}
-                            className="qty-btn"
-                        >
-                            +
-                        </button>
-                    </div>
+                    {!isAdmin() && (
+                        <>
+                            <div className="quantity-selector">
+                                <button
+                                    onClick={() => handleQuantityChange('decrement')}
+                                    className="qty-btn"
+                                    disabled={product.quantity === 0}
+                                >
+                                    −
+                                </button>
+                                <span className="qty-value">{quantity}</span>
+                                <button
+                                    onClick={() => handleQuantityChange('increment')}
+                                    className="qty-btn"
+                                    disabled={product.quantity === 0}
+                                >
+                                    +
+                                </button>
+                            </div>
 
-                    <button className="quick-add-btn" onClick={handleAddToCart}>
-                        Quick Add
-                    </button>
+                            <button
+                                className={`quick-add-btn ${product.quantity === 0 ? 'disabled' : ''}`}
+                                onClick={handleAddToCart}
+                                disabled={product.quantity === 0}
+                            >
+                                {product.quantity === 0 ? 'Out of Stock' : 'Purchase'}
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

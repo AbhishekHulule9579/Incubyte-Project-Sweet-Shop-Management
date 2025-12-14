@@ -7,7 +7,7 @@ const Home = () => {
     const navigate = useNavigate();
 
     const [categories, setCategories] = useState([
-        { id: 'Sweets', name: 'Sweets', count: 0, image: null, bgColor: '#ffe4e1', path: '/sweets' },
+        { id: 'Sweet', name: 'Sweet', count: 0, image: null, bgColor: '#ffe4e1', path: '/sweet' },
         { id: 'Namkeen', name: 'Namkeen', count: 0, image: null, bgColor: '#f0f8ff', path: '/namkeen' },
         { id: 'Dry-Fruits', name: 'Dry Fruits', count: 0, image: null, bgColor: '#e6e6fa', path: '/dry-fruits' },
         { id: 'Gifting', name: 'Gifting', count: 0, image: null, bgColor: '#f5f5dc', path: '/gifting' }
@@ -18,7 +18,7 @@ const Home = () => {
             .then(res => res.json())
             .then(data => {
                 const stats = {
-                    'Sweets': { count: 0, maxQty: -1, image: null },
+                    'Sweet': { count: 0, maxQty: -1, image: null },
                     'Namkeen': { count: 0, maxQty: -1, image: null },
                     'Dry-Fruits': { count: 0, maxQty: -1, image: null },
                     'Gifting': { count: 0, maxQty: -1, image: null }

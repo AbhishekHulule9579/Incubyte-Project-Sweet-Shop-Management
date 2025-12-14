@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface SweetRepository extends JpaRepository<Sweet, Long> {
-    List<Sweet> findByCategoryName(String categoryName);
+        List<Sweet> findByCategoryName(String categoryName);
 
-    List<Sweet> findByNameContainingIgnoreCase(String name);
+        List<Sweet> findByNameContainingIgnoreCase(String name);
 }

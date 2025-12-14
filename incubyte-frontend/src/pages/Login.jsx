@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Auth.css';
 
@@ -9,6 +9,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
     const { login } = useAuth();
 
     // Sliding toggle logic
@@ -47,8 +48,9 @@ const Login = () => {
             if (response.ok) {
                 // Use AuthContext login function
                 login(data.token, data.role, email);
-                // Navigate to home
-                navigate('/');
+                // Navigate to previous page or home
+                const from = location.state?.from || '/';
+                navigate(from, { replace: true });
             } else {
                 // Show red error rectangle
                 setError(data.message || 'Invalid credentials');

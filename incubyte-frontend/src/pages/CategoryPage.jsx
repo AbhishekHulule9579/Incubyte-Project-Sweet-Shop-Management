@@ -7,6 +7,10 @@ const CategoryPage = ({ category }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Filter States
+    const [searchQuery, setSearchQuery] = useState('');
+    const [maxQuantity, setMaxQuantity] = useState(200);
+
     useEffect(() => {
         setLoading(true);
         // Fetch sweets by category
@@ -34,6 +38,15 @@ const CategoryPage = ({ category }) => {
         window.scrollTo(0, 0);
     }, [category]);
 
+    // Filter Logic
+    const filteredProducts = products.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesQuantity = product.quantity <= maxQuantity;
+
+        return matchesSearch && matchesQuantity;
+    });
+
     if (loading) return <div className="shop-loading">Loading {category}...</div>;
     if (error) return <div className="shop-error">Error: {error}</div>;
 
@@ -44,9 +57,33 @@ const CategoryPage = ({ category }) => {
                 <p>Explore our premium collection of {category}</p>
             </div>
 
+            {/* Filter Bar */}
+            <div className="filter-bar" style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', flexWrap: 'wrap' }}>
+                <div className="filter-group">
+                    <input
+                        type="text"
+                        placeholder="Search sweets..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        style={{ padding: '8px 12px', borderRadius: '4px', border: '1px solid #ddd', minWidth: '200px' }}
+                    />
+                </div>
+                <div className="filter-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <label style={{ whiteSpace: 'nowrap' }}>Max Qty: {maxQuantity}</label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="200"
+                        value={maxQuantity}
+                        onChange={(e) => setMaxQuantity(Number(e.target.value))}
+                        style={{ minWidth: '150px' }}
+                    />
+                </div>
+            </div>
+
             <div className="products-grid container">
-                {products.length > 0 ? (
-                    products.map(product => (
+                {filteredProducts.length > 0 ? (
+                    filteredProducts.map(product => (
                         <ProductCard key={product.id} product={product} />
                     ))
                 ) : (
