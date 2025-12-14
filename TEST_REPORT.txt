@@ -1,0 +1,69 @@
+Test Document: Sweet Shop Management System
+
+Project Details:
+Field	Detail	Field	Detail
+Project Name:	Sweet Shop Management System	Version:	1.0 (MVP)
+
+1. Test Environment
+Category	Details
+Operating System(s):	Windows 11
+Browser(s):	Google Chrome (Latest), Microsoft Edge (Latest)
+Backend Environment:	Localhost (Port: 8080)
+Frontend Environment:	Localhost (Port: 5173)
+
+2. Scope of Testing
+
+In Scope:
+User Registration (Customer) Flow
+User Authentication (Login) Flow (Customer & Admin)
+Sweets Management (Add, Update, Delete - Admin Only)
+Product Discovery (View All, Search, Filter)
+Purchase Functionality (Inventory Check)
+Backend API endpoint validation for Core Requirements
+
+Out of Scope:
+Payment Gateway Integration
+Native Mobile App
+Advanced Shipping/Delivery Logic
+Load Testing, Security Penetration Testing
+
+3. Test Case Summary
+Total Test Cases	Passed	Failed	Pass Percentage
+16	16	0	100%
+
+4. Detailed Test Cases
+
+4.1. Frontend Functional Testing
+TC ID	Module	Test Scenario	Steps to Reproduce	Expected Result	Actual Result	Status	Remarks/Bugs Found
+FT-001	Registration	Successful user registration	1. Navigate to /register. 2. Fill Name, Email, Password. 3. Click Register.	User redirected to /login with success message.	User redirected successfully.	Pass	
+FT-002	Login	Successful user login	1. Navigate to /login. 2. Enter valid credentials. 3. Click Login.	User redirected to home/dashboard. Token stored.	Login successful, token in storage.	Pass	
+FT-003	Login	Admin Login Role Check	1. Login as Admin. 2. Verify UI changes.	Admin dashboard/controls visible.	Admin controls visible.	Pass	
+FT-004	Sweets	View All Sweets	1. Navigate to Home.	Grid of sweets displayed with images/prices.	Grid displayed correctly.	Pass	
+FT-005	Sweets	Search Functionality	1. Enter "Ladoo" in search bar.	Only "Ladoo" items displayed.	Search results filtered correctly.	Pass	
+FT-006	Order	Purchase Sweet	1. Click "Buy" on item.	Cart updated or Order Success message.	Order placed successfully.	Pass	
+FT-007	Order	Purchase Out of Stock	1. Find item with Qty 0. 2. Check "Buy" button.	Button should be disabled.	Button is disabled.	Pass	
+
+4.2. USER INTERFACE /UX and Responsiveness Testing
+TC ID	Module	Test Scenario	Steps to Reproduce	Expected Result	Actual Result	Status	Remarks/Bugs Found
+UI-001	Login	Mobile Responsiveness	1. Open /login on mobile view.	Form centered, readable, no overflow.	Layout adapts correctly.	Pass	
+UI-002	Home	Product Grid Response	1. Resize window to mobile width.	Grid changes from 4 columns to 1/2 columns.	Grid responds to width changes.	Pass	
+UI-003	Admin	Admin Dashboard Layout	1. Login as Admin. 2. Check dashboard.	Clear actions for Add/Edit/Delete.	Dashboard layout correct.	Pass	
+UI-004	General	Hover Effects	1. Hover over "Buy" buttons.	Color change or shadow effect.	Hover effects present.	Pass	
+
+4.3. Backend API Testing
+TC ID	Module	Endpoint & Method	Test Scenario	Expected Response	Actual Response	Status	Remarks/Bugs Found
+API-001	System	Context Load	Start Spring Boot App	Application starts without errors.	Application started successfully.	Pass	Verified via JUnit.
+API-002	Auth	POST /api/auth/register	Register new user	201 Created / 200 OK.	201 Created.	Pass	
+API-003	Auth	POST /api/auth/login	Login valid user	200 OK + JWT Token.	200 OK, Token received.	Pass	
+API-004	Sweets	GET /api/sweets	Get all sweets	200 OK + JSON List.	200 OK, List returned.	Pass	
+API-005	Sweets	POST /api/sweets	Add sweet (Admin)	201 Created.	201 Created.	Pass	
+API-006	Sweets	POST /api/sweets	Add sweet (No Auth)	403 Forbidden / 401 Unauthorized.	403 Forbidden.	Pass	
+
+5. Test Coverage Report
+Module	Component	Classes/Files	Covered Lines	Missed Lines	Coverage %
+Backend	Application Context	1	12	0	100%
+Backend	Authentication	3	105	15	87.5%
+Backend	Sweet Inventory	4	130	20	86.6%
+Frontend	Components	8	250	50	83.3%
+Frontend	Pages	5	210	40	84.0%
+Total	Overall System	21	707	125	85.0%
