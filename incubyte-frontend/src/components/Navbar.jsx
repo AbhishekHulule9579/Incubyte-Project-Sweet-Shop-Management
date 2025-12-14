@@ -51,7 +51,7 @@ const Navbar = () => {
                         <li><Link to="/dry-fruits">Dry-Fruits</Link></li>
                         <li><Link to="/namkeen">Namkeen</Link></li>
                         <li><Link to="/gifting">Gifting</Link></li>
-                        <li><a href="#">About Us</a></li>
+                        <li><Link to="/about">About Us</Link></li>
                     </ul>
                 </nav>
                 <div className="header-actions">

@@ -58,7 +58,7 @@ const Home = () => {
                 <div className="hero-content">
                     <h2>Traditional Indian Sweets</h2>
                     <p>Handcrafted with love and pure ingredients.</p>
-                    <button className="cta-btn">Order Now</button>
+                    <button className="cta-btn" onClick={() => navigate('/sweets')}>Order Now</button>
                 </div>
             </section>
 

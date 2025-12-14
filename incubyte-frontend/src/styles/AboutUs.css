@@ -1,0 +1,358 @@
+/* About Us Page Styles */
+.about-us-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fef5e7 0%, #fff5f5 100%);
+    padding: 2rem 0;
+}
+
+.about-us-page .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Hero Section */
+.about-hero {
+    text-align: center;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.about-hero h1 {
+    font-size: 3rem;
+    color: #d35400;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.about-hero .subtitle {
+    font-size: 1.3rem;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+/* About Sections */
+.about-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.about-section h2 {
+    font-size: 2rem;
+    color: #d35400;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid #f39c12;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.content-block p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #34495e;
+    margin-bottom: 1rem;
+}
+
+.content-block strong {
+    color: #d35400;
+}
+
+/* Offerings Grid */
+.offerings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.offering-card {
+    background: linear-gradient(135deg, #fff5f5 0%, #fef5e7 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.offering-card:hover {
+    transform: translateY(-8px);
+    border-color: #f39c12;
+    box-shadow: 0 8px 20px rgba(243, 156, 18, 0.2);
+}
+
+.offering-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.offering-card h3 {
+    font-size: 1.3rem;
+    color: #d35400;
+    margin-bottom: 0.5rem;
+}
+
+.offering-card p {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Values List */
+.values-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.value-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #fef5e7 0%, #fff 100%);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.value-item:hover {
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+    transform: translateX(10px);
+}
+
+.value-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.value-item h3 {
+    font-size: 1.3rem;
+    color: #d35400;
+    margin-bottom: 0.5rem;
+}
+
+.value-item p {
+    color: #7f8c8d;
+    line-height: 1.6;
+}
+
+/* Developer Section */
+.developer-section {
+    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+}
+
+.developer-card {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.developer-avatar {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    overflow: hidden;
+}
+
+.developer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.developer-info h3 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+}
+
+.developer-title {
+    font-size: 1.1rem;
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.developer-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #34495e;
+    margin-bottom: 1rem;
+}
+
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+}
+
+.tech-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.tech-badge:hover {
+    transform: scale(1.05);
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.social-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-btn.linkedin {
+    background: linear-gradient(135deg, #0077b5 0%, #005582 100%);
+}
+
+.social-btn.linkedin:hover {
+    background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+}
+
+.social-btn.github {
+    background: linear-gradient(135deg, #333 0%, #24292e 100%);
+}
+
+.social-btn.github:hover {
+    background: linear-gradient(135deg, #444 0%, #2f363d 100%);
+}
+
+.social-btn.project-repo {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+}
+
+.social-btn.project-repo:hover {
+    background: linear-gradient(135deg, #34ce57 0%, #28a745 100%);
+}
+
+.social-icon {
+    font-size: 1.2rem;
+}
+
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, #d35400 0%, #f39c12 100%);
+    color: white;
+    text-align: center;
+}
+
+.cta-section h2 {
+    color: white;
+    border-bottom-color: white;
+}
+
+.cta-section p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.cta-button {
+    background: white;
+    color: #d35400;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    background: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .about-hero h1 {
+        font-size: 2rem;
+    }
+
+    .about-hero .subtitle {
+        font-size: 1rem;
+    }
+
+    .about-section {
+        padding: 1.5rem;
+    }
+
+    .about-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .offerings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .developer-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .developer-avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 3rem;
+    }
+
+    .tech-stack {
+        justify-content: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+}

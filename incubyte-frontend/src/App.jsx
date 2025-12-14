@@ -10,6 +10,7 @@ import ShopAll from './pages/ShopAll';
 import CategoryPage from './pages/CategoryPage';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
+import AboutUs from './pages/AboutUs';
 import Layout from './components/Layout';
 import './App.css';
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/namkeen" element={<CategoryPage category="Namkeen" />} />
               <Route path="/dry-fruits" element={<CategoryPage category="Dry-Fruits" />} />
               <Route path="/gifting" element={<CategoryPage category="Gifting" />} />
+              <Route path="/about" element={<AboutUs />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
