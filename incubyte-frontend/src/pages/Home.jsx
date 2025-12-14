@@ -1,37 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
-import heroImage from '../assets/hero.jpg'; // Make sure to name your image 'hero.png'
+import heroImage from '../assets/hero.jpg';
 
 const Home = () => {
-    const navigate = useNavigate();
-
     return (
         <div className="home-page">
-            {/* Header / Navbar */}
-            <header className="main-header">
-                <div className="container header-content">
-                    <div className="logo">
-                        <h1>SWEET CORNER</h1>
-                        <span className="tagline">SINCE 1990</span>
-                    </div>
-                    <nav className="main-nav">
-                        <ul>
-                            <li><a href="#">Shop All</a></li>
-                            <li><a href="#">Sweets</a></li>
-                            <li><a href="#">Namkeen</a></li>
-                            <li><a href="#">Gifting</a></li>
-                            <li><a href="#">About Us</a></li>
-                        </ul>
-                    </nav>
-                    <div className="header-actions">
-                        <button className="icon-btn">🔍</button>
-                        <button className="icon-btn" onClick={() => navigate('/login')}>👤</button>
-                        <button className="icon-btn">🛍️</button>
-                    </div>
-                </div>
-            </header>
-
             {/* Hero Section */}
             <section className="hero-section" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${heroImage})` }}>
                 <div className="hero-content">

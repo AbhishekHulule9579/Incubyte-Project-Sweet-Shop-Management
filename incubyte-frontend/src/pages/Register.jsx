@@ -28,7 +28,13 @@ const Register = () => {
                 body: JSON.stringify({ name, email, password })
             });
 
-            const data = await response.json();
+            const text = await response.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                data = { message: text };
+            }
 
             if (response.ok) {
                 // Auto login or redirect to login
@@ -43,46 +49,48 @@ const Register = () => {
     };
 
     return (
-        <div className="auth-container">
-            <h2 className="auth-title">Create Account</h2>
+        <div className="auth-page">
+            <div className="auth-container">
+                <h2 className="auth-title">Create Account</h2>
 
-            {/* Error Box (Red Rectangle) */}
-            {error && <div className="error-rectangle">⚠️ {error}</div>}
+                {/* Error Box (Red Rectangle) */}
+                {error && <div className="error-rectangle">⚠️ {error}</div>}
 
-            <form className="auth-form" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Full Name</label>
-                    <input
-                        type="text"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
+                <form className="auth-form" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Full Name</label>
+                        <input
+                            type="text"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+
+                    <button type="submit" className="auth-btn">Register</button>
+                </form>
+
+                <div className="secondary-links">
+                    <span className="link" onClick={() => navigate('/login')}>Already have an account? Login</span>
                 </div>
-                <div className="form-group">
-                    <label>Email</label>
-                    <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-
-                <button type="submit" className="auth-btn">Register</button>
-            </form>
-
-            <div className="secondary-links">
-                <span className="link" onClick={() => navigate('/login')}>Already have an account? Login</span>
             </div>
         </div>
     );

@@ -1,79 +1,17 @@
-/* Header */
-.main-header {
-    background-color: var(--white);
-    padding: 1.5rem 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo h1 {
-    font-family: var(--font-heading);
-    color: var(--primary-color);
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-}
-
-.logo .tagline {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--accent-color);
-    letter-spacing: 2px;
-    text-align: center;
-}
-
-.main-nav ul {
-    display: flex;
-    gap: 2rem;
-}
-
-.main-nav a {
-    font-weight: 500;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: color 0.3s;
-}
-
-.main-nav a:hover {
-    color: var(--primary-color);
-}
-
-.header-actions {
-    display: flex;
-    gap: 1rem;
-}
-
-.icon-btn {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.icon-btn:hover {
-    transform: scale(1.1);
-}
-
 /* Hero Section */
 .hero-section {
     background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://placehold.co/1920x600/b91c1c/white?text=Sweet+Delights');
     background-size: cover;
     background-position: center;
-    height: 500px;
+    height: 85vh;
+    /* Make it fill most of the screen */
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: var(--white);
+    margin-top: -10px;
+    /* Pull it up slightly if needed, but Layout handles spacing */
 }
 
 .hero-content h2 {

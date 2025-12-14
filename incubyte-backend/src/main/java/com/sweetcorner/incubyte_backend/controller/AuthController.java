@@ -22,7 +22,8 @@ public class AuthController {
         try {
             return ResponseEntity.ok(authService.registerCustomer(request));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(new com.sweetcorner.incubyte_backend.dto.ErrorResponse(e.getMessage()));
         }
     }
 
@@ -31,7 +32,8 @@ public class AuthController {
         try {
             return ResponseEntity.ok(authService.login(request));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body(e.getMessage());
+            return ResponseEntity.status(401)
+                    .body(new com.sweetcorner.incubyte_backend.dto.ErrorResponse(e.getMessage()));
         }
     }
 }
