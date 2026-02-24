@@ -1,0 +1,30 @@
+services:
+  # 1. The Database Service
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: sweet_shop
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  # 2. The Backend Service
+  backend:
+    build: ./incubyte-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sweet_shop
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+
+  # 3. The Frontend Service
+  frontend:
+    build: ./incubyte-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
