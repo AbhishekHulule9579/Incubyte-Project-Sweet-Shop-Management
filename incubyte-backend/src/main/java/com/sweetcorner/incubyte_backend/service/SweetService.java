@@ -5,27 +5,41 @@ import com.sweetcorner.incubyte_backend.entity.Category;
 import com.sweetcorner.incubyte_backend.entity.Sweet;
 import com.sweetcorner.incubyte_backend.repository.CategoryRepository;
 import com.sweetcorner.incubyte_backend.repository.SweetRepository;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class SweetService {
 
     private final SweetRepository sweetRepository;
     private final CategoryRepository categoryRepository;
     private final com.sweetcorner.incubyte_backend.repository.SweetOrderRepository sweetOrderRepository;
+
     public SweetService(SweetRepository sweetRepository, CategoryRepository categoryRepository,
             com.sweetcorner.incubyte_backend.repository.SweetOrderRepository sweetOrderRepository) {
         this.sweetRepository = sweetRepository;
         this.categoryRepository = categoryRepository;
         this.sweetOrderRepository = sweetOrderRepository;
     }
+
+    //cache the entire catalog
+    // the product is the cache name and the 'all' is the specific key
+    @Cacheable(value = "products",key="'all'")
     public List<Sweet> getAllSweets() {
+        System.out.println("Fetching sweets from the postgres"); // this will prints only if Redis is empty
         return sweetRepository.findAll();
     }
+
+
+    @Cacheable(value = "category",key="#categoryName")
     public List<Sweet> getSweetsByCategory(String categoryName) {
+        System.out.println("Fetching category "+categoryName+" from postgres"); // fro testing 
         return sweetRepository.findByCategoryName(categoryName);
     }
+    
     public Sweet addSweet(SweetRequest request) {
         Category category = categoryRepository.findByName(request.getCategoryName())
                 .orElseThrow(() -> new RuntimeException("Category not found: " + request.getCategoryName()));
