@@ -1,5 +1,7 @@
 package com.sweetcorner.incubyte_backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,5 +35,16 @@ public class GuestCartController {
     //React will call: GET http://localhost:8080/api/guest/cart/view?sessionId=abc-123
 
     @GetMapping("/view")
-    public ResponseEntity<Lis
+    public ResponseEntity<List<CartItem>> viewCart(@RequestParam String sessionId){
+        List<CartItem>cart=guestCartService.getGuestCart(sessionId);
+        return ResponseEntity.ok(cart);
+    }
+
+    // endpoint to clear the cart
+    // React will call: DELETE http://localhost:8080/api/guest/cart/clear?sessionId=abc-123
+
+    public ResponseEntity<String> clearCart(@RequestParam String sessionId){
+        guestCartService.clearGuestCart(sessionId);
+        return ResponseEntity.ok("Guest cart cleared from Redis");
+    }
 }

@@ -11,13 +11,14 @@ const Cart = () => {
 
     // Protect route: If not authenticated, redirect to login
     // This is a safety check, though Navbar handles the initial redirect
-    useEffect(() => {
-        if (!isAuthenticated()) {
-            navigate('/login', { state: { from: '/cart' } });
-        }
-    }, [isAuthenticated, navigate]);
 
     const handleCheckout = async () => {
+        if(!isAuthenticated()){
+            alert("Please log in to complete your purchase !");
+            navigate('/login',{state:{from:'/cart'}
+            });
+            return;
+        }
         try {
             const response = await fetch('http://localhost:8080/api/sweets/purchase', {
                 method: 'POST',
@@ -45,7 +46,6 @@ const Cart = () => {
         }
     };
 
-    if (!isAuthenticated()) return null; // Prevent flash of content
 
     return (
         <div className="cart-page container">

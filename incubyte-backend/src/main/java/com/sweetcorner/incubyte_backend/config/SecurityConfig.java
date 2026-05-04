@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configure(http))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/uploads/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/uploads/**","/api/guest/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/sweets/**").permitAll()
                         .anyRequest().authenticated()
                 )
