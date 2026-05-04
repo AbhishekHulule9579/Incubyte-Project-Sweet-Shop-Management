@@ -96,13 +96,7 @@ const Navbar = () => {
 
                     {/* Cart Button - Visible to everyone EXCEPT Admin */}
                     {!isAdmin() && (
-                        <button className="icon-btn" onClick={() => {
-                            if (isAuthenticated()) {
-                                navigate('/cart');
-                            } else {
-                                navigate('/login', { state: { from: '/cart' } });
-                            }
-                        }}>
+                        <button className="icon-btn" onClick={() => navigate('/cart')}>
                             🛍️
                         </button>
                     )}
