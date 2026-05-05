@@ -3,40 +3,48 @@ package com.sweetcorner.incubyte_backend.service;
 import com.sweetcorner.incubyte_backend.dto.SweetRequest;
 import com.sweetcorner.incubyte_backend.entity.Category;
 import com.sweetcorner.incubyte_backend.entity.Sweet;
+import com.sweetcorner.incubyte_backend.entity.SweetOrder;
+import com.sweetcorner.incubyte_backend.entity.SweetOrderDetail;
 import com.sweetcorner.incubyte_backend.repository.CategoryRepository;
+import com.sweetcorner.incubyte_backend.repository.SweetOrderRepository;
 import com.sweetcorner.incubyte_backend.repository.SweetRepository;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SweetService {
 
     private final SweetRepository sweetRepository;
     private final CategoryRepository categoryRepository;
-    private final com.sweetcorner.incubyte_backend.repository.SweetOrderRepository sweetOrderRepository;
+    private final SweetOrderRepository sweetOrderRepository;
 
     public SweetService(SweetRepository sweetRepository, CategoryRepository categoryRepository,
-            com.sweetcorner.incubyte_backend.repository.SweetOrderRepository sweetOrderRepository) {
+            SweetOrderRepository sweetOrderRepository) {
         this.sweetRepository = sweetRepository;
         this.categoryRepository = categoryRepository;
         this.sweetOrderRepository = sweetOrderRepository;
     }
 
-    //cache the entire catalog
-    // the product is the cache name and the 'all' is the specific key
-    @Cacheable(value = "products",key="'all'")
+    // Cache the entire catalog
+    @Cacheable(value = "products", key="'all'")
     public List<Sweet> getAllSweets() {
-        System.out.println("Fetching sweets from the postgres"); // this will prints only if Redis is empty
+        System.out.println("Fetching sweets from postgres"); 
         return sweetRepository.findAll();
     }
 
-
-    @Cacheable(value = "category",key="#categoryName")
+    // Cache categories
+    @Cacheable(value = "category", key="#categoryName")
     public List<Sweet> getSweetsByCategory(String categoryName) {
-        System.out.println("Fetching category "+categoryName+" from postgres"); // fro testing 
+        System.out.println("Fetching category " + categoryName + " from postgres"); 
         return sweetRepository.findByCategoryName(categoryName);
     }
     
@@ -54,6 +62,7 @@ public class SweetService {
 
         return sweetRepository.save(sweet);
     }
+
     public Sweet updateSweet(Long id, SweetRequest request) {
         Sweet sweet = sweetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sweet not found"));
@@ -70,6 +79,7 @@ public class SweetService {
 
         return sweetRepository.save(sweet);
     }
+
     public Sweet restockSweet(Long id, Integer quantityToAdd) {
         Sweet sweet = sweetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sweet not found"));
@@ -77,22 +87,28 @@ public class SweetService {
         sweet.setQuantity(sweet.getQuantity() + quantityToAdd);
         return sweetRepository.save(sweet);
     }
+
     public void deleteSweet(Long id) {
         if (!sweetRepository.existsById(id)) {
             throw new RuntimeException("Sweet not found");
         }
         sweetRepository.deleteById(id);
     }
-    @org.springframework.transaction.annotation.Transactional
-    public void purchaseSweets(List<java.util.Map<String, Object>> items, String userEmail) {
-        com.sweetcorner.incubyte_backend.entity.SweetOrder order = new com.sweetcorner.incubyte_backend.entity.SweetOrder();
+
+    // --- REDIS CACHING FOR LOGGED IN USERS ---
+
+    // 1. Evict (Delete) Cache when a purchase is made
+    @CacheEvict(value = "userOrders", key="#userEmail")
+    @Transactional
+    public void purchaseSweets(List<Map<String, Object>> items, String userEmail) {
+        SweetOrder order = new SweetOrder();
         order.setUserEmail(userEmail);
-        order.setOrderDate(java.time.LocalDateTime.now());
+        order.setOrderDate(LocalDateTime.now());
 
-        java.util.List<com.sweetcorner.incubyte_backend.entity.SweetOrderDetail> details = new java.util.ArrayList<>();
-        java.math.BigDecimal totalAmount = java.math.BigDecimal.ZERO;
+        List<SweetOrderDetail> details = new ArrayList<>();
+        BigDecimal totalAmount = BigDecimal.ZERO;
 
-        for (java.util.Map<String, Object> item : items) {
+        for (Map<String, Object> item : items) {
             Long id = ((Number) item.get("id")).longValue();
             Integer quantityToBuy = ((Number) item.get("quantity")).intValue();
 
@@ -106,7 +122,7 @@ public class SweetService {
             sweet.setQuantity(sweet.getQuantity() - quantityToBuy);
             sweetRepository.save(sweet);
 
-            com.sweetcorner.incubyte_backend.entity.SweetOrderDetail detail = new com.sweetcorner.incubyte_backend.entity.SweetOrderDetail();
+            SweetOrderDetail detail = new SweetOrderDetail();
             detail.setSweetOrder(order);
             detail.setSweetName(sweet.getName());
             detail.setImageUrl(sweet.getImageUrl());
@@ -114,14 +130,18 @@ public class SweetService {
             detail.setPrice(sweet.getPrice());
 
             details.add(detail);
-            totalAmount = totalAmount.add(sweet.getPrice().multiply(new java.math.BigDecimal(quantityToBuy)));
+            totalAmount = totalAmount.add(sweet.getPrice().multiply(new BigDecimal(quantityToBuy)));
         }
 
         order.setTotalAmount(totalAmount);
         order.setOrderDetails(details);
         sweetOrderRepository.save(order);
     }
-    public java.util.List<com.sweetcorner.incubyte_backend.entity.SweetOrder> getUserOrders(String userEmail) {
+
+    // 2. Cache the Orders for fast loading on the frontend
+    @Cacheable(value = "userOrders", key = "#userEmail")
+    public List<SweetOrder> getUserOrders(String userEmail) {
+        System.out.println("Fetching order history for " + userEmail + " from PostgreSQL!"); 
         return sweetOrderRepository.findByUserEmailOrderByOrderDateDesc(userEmail);
     }
 }
