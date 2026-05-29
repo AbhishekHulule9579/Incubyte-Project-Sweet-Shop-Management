@@ -7,8 +7,6 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 @EnableCaching
 public class IncubyteBackendApplication {
-
-	
 	public static void main(String[] args) {
 		SpringApplication.run(IncubyteBackendApplication.class, args);
 	}
